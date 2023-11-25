@@ -1,0 +1,167 @@
+
+<!DOCTYPE html>
+
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>observador module &#8212; documentación de Veterinaria - 0.0.1</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/translations.js"></script>
+    <link rel="index" title="Índice" href="genindex.html" />
+    <link rel="search" title="Búsqueda" href="search.html" />
+    <link rel="next" title="vista module" href="vista.html" />
+    <link rel="prev" title="modelo module" href="modelo.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="module-observador">
+<span id="observador-module"></span><h1>observador module<a class="headerlink" href="#module-observador" title="Enlazar permanentemente con este título">¶</a></h1>
+<dl class="simple">
+<dt>observador.py</dt><dd><p>Clase para utilizar el patrón observador en el programa</p>
+</dd>
+</dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="observador.ConcreteObservaorA">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">observador.</span></span><span class="sig-name descname"><span class="pre">ConcreteObservaorA</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/observador.html#ConcreteObservaorA"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#observador.ConcreteObservaorA" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#observador.Observador" title="observador.Observador"><code class="xref py py-class docutils literal notranslate"><span class="pre">observador.Observador</span></code></a></p>
+<p>ConcreteObservaorA: El observador concreto</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="observador.ConcreteObservaorA.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/observador.html#ConcreteObservaorA.update"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#observador.ConcreteObservaorA.update" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="observador.Observador">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">observador.</span></span><span class="sig-name descname"><span class="pre">Observador</span></span><a class="reference internal" href="_modules/observador.html#Observador"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#observador.Observador" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="observador.Observador.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/observador.html#Observador.update"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#observador.Observador.update" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="observador.Sujeto">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">observador.</span></span><span class="sig-name descname"><span class="pre">Sujeto</span></span><a class="reference internal" href="_modules/observador.html#Sujeto"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#observador.Sujeto" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="observador.Sujeto.agregar">
+<span class="sig-name descname"><span class="pre">agregar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/observador.html#Sujeto.agregar"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#observador.Sujeto.agregar" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="observador.Sujeto.notificar">
+<span class="sig-name descname"><span class="pre">notificar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/observador.html#Sujeto.notificar"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#observador.Sujeto.notificar" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="observador.Sujeto.observadores">
+<span class="sig-name descname"><span class="pre">observadores</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em><a class="headerlink" href="#observador.Sujeto.observadores" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="observador.Sujeto.quitar">
+<span class="sig-name descname"><span class="pre">quitar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/observador.html#Sujeto.quitar"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#observador.Sujeto.quitar" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Veterinaria</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navegación</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="controlado.html">controlado module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="decoradores.html">decoradores module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modelo.html">modelo module</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">observador module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vista.html">vista module</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="modelo.html" title="capítulo anterior">modelo module</a></li>
+      <li>Next: <a href="vista.html" title="próximo capítulo">vista module</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Búsqueda rápida</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Ir a" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2023, Ese Oxalde.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.3.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/observador.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

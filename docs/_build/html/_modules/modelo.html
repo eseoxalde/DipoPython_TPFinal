@@ -1,0 +1,373 @@
+
+<!DOCTYPE html>
+
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>modelo &#8212; documentación de Veterinaria - 0.0.1</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/translations.js"></script>
+    <link rel="index" title="Índice" href="../genindex.html" />
+    <link rel="search" title="Búsqueda" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Código fuente para modelo</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">modelo.py:</span>
+<span class="sd">    Módulo que contiene la lógica del programa.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">sqlite3</span>
+<span class="kn">from</span> <span class="nn">tkinter</span> <span class="kn">import</span> <span class="n">messagebox</span>
+<span class="kn">from</span> <span class="nn">decoradores</span> <span class="kn">import</span> <span class="n">registrar_log</span>
+<span class="kn">from</span> <span class="nn">observador</span> <span class="kn">import</span> <span class="n">Sujeto</span>
+
+
+<div class="viewcode-block" id="Abm"><a class="viewcode-back" href="../modelo.html#modelo.Abm">[documentos]</a><span class="k">class</span> <span class="nc">Abm</span><span class="p">(</span><span class="n">Sujeto</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Clase que contiene:</span>
+<span class="sd">    - Conexión a la base de datos</span>
+<span class="sd">    - ABM de registros de la base de datos.</span>
+<span class="sd">    - Actualiza y limpia el treeview.</span>
+<span class="sd">    - Base de datos:</span>
+<span class="sd">        veterinaria.db</span>
+<span class="sd">        campos:</span>
+<span class="sd">            - id: llave primaria</span>
+<span class="sd">            - nombre: string no nulo</span>
+<span class="sd">            - tipo: string</span>
+<span class="sd">            - raza: string</span>
+<span class="sd">            - peso: integer</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">con</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s2">&quot;veterinaria.db&quot;</span><span class="p">)</span>
+            <span class="n">cursor</span> <span class="o">=</span> <span class="n">con</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+            <span class="n">sql</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;CREATE TABLE IF NOT EXISTS animales</span>
+<span class="s2">                (id INTEGER PRIMARY KEY AUTOINCREMENT,</span>
+<span class="s2">                nombre varchar(20) NOT NULL,</span>
+<span class="s2">                tipo varchar(10),</span>
+<span class="s2">                raza varchar(20),</span>
+<span class="s2">                peso real)</span>
+<span class="s2">        &quot;&quot;&quot;</span>
+            <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">sql</span><span class="p">)</span>
+            <span class="n">con</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error de conexion&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Abm.conexion"><a class="viewcode-back" href="../modelo.html#modelo.Abm.conexion">[documentos]</a>    <span class="k">def</span> <span class="nf">conexion</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="n">con</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s2">&quot;veterinaria.db&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">con</span></div>
+
+    <span class="c1">###################### ABM #########################################</span>
+
+    <span class="nd">@registrar_log</span><span class="p">(</span><span class="s2">&quot;alta&quot;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">alta</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nombre</span><span class="p">,</span> <span class="n">tipo</span><span class="p">,</span> <span class="n">raza</span><span class="p">,</span> <span class="n">peso</span><span class="p">,</span> <span class="n">tree</span><span class="p">,</span> <span class="n">e_nombre</span><span class="p">,</span> <span class="n">e_raza</span><span class="p">,</span> <span class="n">e_peso</span><span class="p">,</span> <span class="n">e_tipo</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Realiza el alta en la base de datos y actualiza el treeview. Valida el nombre, si existe y si comienza con mayúuscula y el peso, que sea un número</span>
+
+<span class="sd">        :param nombre, tipo, raza, peso: valores ingresados por el usuario</span>
+<span class="sd">        :param tree: el treeview</span>
+<span class="sd">        :param e_nombre, e_raza, e_peso, e_tipo: entry type de la vista</span>
+<span class="sd">        :returns: nueva fila en bd, nueva vista en treeview y mensaje de éxito o error según el caso</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">patron_nombre</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;[A-Z][a-z]&quot;</span><span class="p">)</span>
+        <span class="n">patron_peso</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;[^0-9]&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">nombre</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+            <span class="n">messagebox</span><span class="o">.</span><span class="n">showerror</span><span class="p">(</span><span class="s2">&quot;ERROR&quot;</span><span class="p">,</span> <span class="s2">&quot;El nombre es obligatorio&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">patron_peso</span><span class="p">,</span> <span class="n">peso</span><span class="p">):</span>
+            <span class="n">messagebox</span><span class="o">.</span><span class="n">showerror</span><span class="p">(</span><span class="s2">&quot;ERROR&quot;</span><span class="p">,</span> <span class="s2">&quot;El peso debe ser un número&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">patron_nombre</span><span class="p">,</span> <span class="n">nombre</span><span class="p">):</span>
+            <span class="n">con</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">conexion</span><span class="p">()</span>
+            <span class="n">cursor</span> <span class="o">=</span> <span class="n">con</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">nombre</span><span class="p">,</span> <span class="n">tipo</span><span class="p">,</span> <span class="n">raza</span><span class="p">,</span> <span class="n">peso</span><span class="p">)</span>
+            <span class="n">sql</span> <span class="o">=</span> <span class="s2">&quot;INSERT INTO animales(nombre, tipo, raza, peso) VALUES(?, ?, ?, ?)&quot;</span>
+            <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">sql</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+            <span class="n">con</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">actualizar_treeview</span><span class="p">(</span><span class="n">tree</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">notificar</span><span class="p">(</span><span class="n">nombre</span><span class="p">,</span> <span class="n">tipo</span><span class="p">,</span> <span class="n">raza</span><span class="p">,</span> <span class="n">peso</span><span class="p">)</span>
+            <span class="n">messagebox</span><span class="o">.</span><span class="n">showinfo</span><span class="p">(</span><span class="s2">&quot;Éxito&quot;</span><span class="p">,</span> <span class="s2">&quot;El alta fue exitosa&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">limpia_entry</span><span class="p">(</span><span class="n">e_nombre</span><span class="p">,</span> <span class="n">e_raza</span><span class="p">,</span> <span class="n">e_peso</span><span class="p">,</span> <span class="n">e_tipo</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">messagebox</span><span class="o">.</span><span class="n">showerror</span><span class="p">(</span><span class="s2">&quot;ERROR&quot;</span><span class="p">,</span> <span class="s2">&quot;El nombre debe empezar en mayúscula&quot;</span><span class="p">)</span>
+
+    <span class="nd">@registrar_log</span><span class="p">(</span><span class="s2">&quot;baja&quot;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">borrar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tree</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Realiza la baja en la base de datos y actualiza el treeview.</span>
+
+<span class="sd">        :param tree: el treeview</span>
+<span class="sd">        :returns: nueva vista en treeview y mensaje de éxito o error según el caso</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">valor</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">selection</span><span class="p">()</span>
+            <span class="n">item</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">item</span><span class="p">(</span><span class="n">valor</span><span class="p">)</span>
+            <span class="n">mi_id</span> <span class="o">=</span> <span class="n">item</span><span class="p">[</span><span class="s2">&quot;text&quot;</span><span class="p">]</span>
+            <span class="n">con</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">conexion</span><span class="p">()</span>
+            <span class="n">cursor</span> <span class="o">=</span> <span class="n">con</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">mi_id</span><span class="p">,)</span>
+            <span class="n">sql</span> <span class="o">=</span> <span class="s2">&quot;DELETE FROM animales WHERE id = ?;&quot;</span>
+            <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">sql</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+            <span class="n">con</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+            <span class="n">tree</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">valor</span><span class="p">)</span>
+            <span class="n">messagebox</span><span class="o">.</span><span class="n">showinfo</span><span class="p">(</span><span class="s2">&quot;Éxito&quot;</span><span class="p">,</span> <span class="s2">&quot;La baja fue exitosa&quot;</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="n">messagebox</span><span class="o">.</span><span class="n">showerror</span><span class="p">(</span><span class="s2">&quot;ERROR&quot;</span><span class="p">,</span> <span class="s2">&quot;Primero debe seleccionar un item&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Abm.ver_elemento"><a class="viewcode-back" href="../modelo.html#modelo.Abm.ver_elemento">[documentos]</a>    <span class="k">def</span> <span class="nf">ver_elemento</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tree</span><span class="p">,</span> <span class="n">var_nombre</span><span class="p">,</span> <span class="n">var_peso</span><span class="p">,</span> <span class="n">var_raza</span><span class="p">,</span> <span class="n">var_tipo</span><span class="p">,</span> <span class="n">boton_alta</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Selecciona un elemento del treeview, lo busca en la base de datos y completa los campos</span>
+<span class="sd">            correspondientes, también desactiva el botón para dar de alta un registro para</span>
+<span class="sd">            evitar un alta accidental.</span>
+
+<span class="sd">        :param tree: el treeview</span>
+<span class="sd">        :param var_nombre, var_raza, var_peso, var_tipo: variables de la vista</span>
+<span class="sd">        :param boton_alta: botón de alta en la vista</span>
+<span class="sd">        :returns: los campos completos para la vista o mensaje de error si no se selecciono nada</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">valor</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">selection</span><span class="p">()</span>
+            <span class="n">boton_alta</span><span class="o">.</span><span class="n">config</span><span class="p">(</span>
+                <span class="n">state</span><span class="o">=</span><span class="s2">&quot;disabled&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">item</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">item</span><span class="p">(</span><span class="n">valor</span><span class="p">)</span>
+            <span class="n">mi_id</span> <span class="o">=</span> <span class="n">item</span><span class="p">[</span><span class="s2">&quot;text&quot;</span><span class="p">]</span>
+            <span class="n">con</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">conexion</span><span class="p">()</span>
+            <span class="n">cursor</span> <span class="o">=</span> <span class="n">con</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">mi_id</span><span class="p">,)</span>
+            <span class="n">sql</span> <span class="o">=</span> <span class="s2">&quot;Select * FROM animales WHERE id = ?;&quot;</span>
+            <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">sql</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+            <span class="n">rows</span> <span class="o">=</span> <span class="n">cursor</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">rows</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+            <span class="n">var_nombre</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="n">var_tipo</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+            <span class="n">var_raza</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+            <span class="n">var_peso</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="mi">4</span><span class="p">])</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="n">messagebox</span><span class="o">.</span><span class="n">showerror</span><span class="p">(</span><span class="s2">&quot;ERROR&quot;</span><span class="p">,</span> <span class="s2">&quot;Primero debe seleccionar un item&quot;</span><span class="p">)</span></div>
+
+    <span class="nd">@registrar_log</span><span class="p">(</span><span class="s2">&quot;update&quot;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">actualizar</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">nombre</span><span class="p">,</span>
+        <span class="n">tipo</span><span class="p">,</span>
+        <span class="n">raza</span><span class="p">,</span>
+        <span class="n">peso</span><span class="p">,</span>
+        <span class="n">tree</span><span class="p">,</span>
+        <span class="n">e_nombre</span><span class="p">,</span>
+        <span class="n">e_raza</span><span class="p">,</span>
+        <span class="n">e_peso</span><span class="p">,</span>
+        <span class="n">e_tipo</span><span class="p">,</span>
+        <span class="n">boton_alta</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Realiza la modificación en la base de datos, actualiza el treeview y habilita el botón de alta</span>
+<span class="sd">        Valida: el nombre, si existe</span>
+<span class="sd">                el peso, que sea un número</span>
+
+<span class="sd">        :param nombre, tipo, raza, peso: valores ingresados por el usuario</span>
+<span class="sd">        :param tree: el treeview</span>
+<span class="sd">        :param e_nombre, e_raza, e_peso, e_tipo: entry type de la vista</span>
+<span class="sd">        :param boton_alta: botón de alta en la vista</span>
+<span class="sd">        :returns: nueva vista en treeview y mensaje de éxito o error según el caso</span>
+<span class="sd">        :regex patron_peso: El peso no debe contener caracteres no numéricos</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">patron_peso</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;[^0-9]&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">nombre</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+            <span class="n">messagebox</span><span class="o">.</span><span class="n">showerror</span><span class="p">(</span>
+                <span class="s2">&quot;ERROR&quot;</span><span class="p">,</span> <span class="s2">&quot;Primero seleccione un elemento con el boton &#39;Ver Fila&#39;&quot;</span>
+            <span class="p">)</span>
+        <span class="k">elif</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">patron_peso</span><span class="p">,</span> <span class="n">peso</span><span class="p">):</span>
+            <span class="n">messagebox</span><span class="o">.</span><span class="n">showerror</span><span class="p">(</span><span class="s2">&quot;ERROR&quot;</span><span class="p">,</span> <span class="s2">&quot;El peso debe ser un número&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">valor</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">selection</span><span class="p">()</span>
+            <span class="n">item</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">item</span><span class="p">(</span><span class="n">valor</span><span class="p">)</span>
+            <span class="n">mi_id</span> <span class="o">=</span> <span class="n">item</span><span class="p">[</span><span class="s2">&quot;text&quot;</span><span class="p">]</span>
+            <span class="n">con</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">conexion</span><span class="p">()</span>
+            <span class="n">cursor</span> <span class="o">=</span> <span class="n">con</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">nombre</span><span class="p">,</span> <span class="n">tipo</span><span class="p">,</span> <span class="n">raza</span><span class="p">,</span> <span class="n">peso</span><span class="p">,</span> <span class="n">mi_id</span><span class="p">)</span>
+            <span class="n">sql</span> <span class="o">=</span> <span class="s2">&quot;UPDATE animales SET nombre=?, tipo=?, raza=?, peso=? WHERE id=?&quot;</span>
+            <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">sql</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+            <span class="n">con</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+            <span class="n">boton_alta</span><span class="o">.</span><span class="n">config</span><span class="p">(</span>
+                <span class="n">state</span><span class="o">=</span><span class="s2">&quot;normal&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">actualizar_treeview</span><span class="p">(</span><span class="n">tree</span><span class="p">)</span>
+            <span class="n">messagebox</span><span class="o">.</span><span class="n">showinfo</span><span class="p">(</span><span class="s2">&quot;Éxito&quot;</span><span class="p">,</span> <span class="s2">&quot;La actualización fue exitosa&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">limpia_entry</span><span class="p">(</span><span class="n">e_nombre</span><span class="p">,</span> <span class="n">e_raza</span><span class="p">,</span> <span class="n">e_peso</span><span class="p">,</span> <span class="n">e_tipo</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Abm.ver_todo"><a class="viewcode-back" href="../modelo.html#modelo.Abm.ver_todo">[documentos]</a>    <span class="k">def</span> <span class="nf">ver_todo</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tree</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Realiza una búsqueda de todos los registos de la base de datos y actualiza el treeview.</span>
+
+<span class="sd">        :param tree: el treeview</span>
+<span class="sd">        :returns: nueva vista en treeview ordenada por tipo</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">limpiar_treeview</span><span class="p">(</span><span class="n">tree</span><span class="p">)</span>
+        <span class="n">con</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">conexion</span><span class="p">()</span>
+        <span class="n">cursor</span> <span class="o">=</span> <span class="n">con</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+        <span class="n">sql</span> <span class="o">=</span> <span class="s2">&quot;SELECT * FROM animales ORDER BY tipo ASC;&quot;</span>
+        <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">sql</span><span class="p">)</span>
+        <span class="n">filas</span> <span class="o">=</span> <span class="n">cursor</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">filas</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+            <span class="n">tree</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;end&quot;</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">values</span><span class="o">=</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">row</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">row</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">row</span><span class="p">[</span><span class="mi">4</span><span class="p">]))</span></div>
+
+<div class="viewcode-block" id="Abm.ver_orden_nombre"><a class="viewcode-back" href="../modelo.html#modelo.Abm.ver_orden_nombre">[documentos]</a>    <span class="k">def</span> <span class="nf">ver_orden_nombre</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tree</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Realiza una búsqueda de todos los registos de la base de datos y actualiza el treeview.</span>
+
+<span class="sd">        :param tree: el treeview</span>
+<span class="sd">        :returns: nueva vista en treeview ordenada por nombre</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">limpiar_treeview</span><span class="p">(</span><span class="n">tree</span><span class="p">)</span>
+        <span class="n">con</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">conexion</span><span class="p">()</span>
+        <span class="n">cursor</span> <span class="o">=</span> <span class="n">con</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+        <span class="n">sql</span> <span class="o">=</span> <span class="s2">&quot;SELECT * FROM animales ORDER BY nombre ASC;&quot;</span>
+        <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">sql</span><span class="p">)</span>
+        <span class="n">filas</span> <span class="o">=</span> <span class="n">cursor</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">filas</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+            <span class="n">tree</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;end&quot;</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">values</span><span class="o">=</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">row</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">row</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">row</span><span class="p">[</span><span class="mi">4</span><span class="p">]))</span></div>
+
+    <span class="c1">### Treevieww ####</span>
+
+<div class="viewcode-block" id="Abm.actualizar_treeview"><a class="viewcode-back" href="../modelo.html#modelo.Abm.actualizar_treeview">[documentos]</a>    <span class="k">def</span> <span class="nf">actualizar_treeview</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mitreeview</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Actualiza el treeview con todos los registros de la base de datos ordenados por id</span>
+
+<span class="sd">        :param mitreeview: el treeview</span>
+<span class="sd">        :returns: nueva vista en treeview ordenada por id</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">records</span> <span class="o">=</span> <span class="n">mitreeview</span><span class="o">.</span><span class="n">get_children</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">records</span><span class="p">:</span>
+            <span class="n">mitreeview</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">element</span><span class="p">)</span>
+        <span class="n">sql</span> <span class="o">=</span> <span class="s2">&quot;SELECT * FROM animales ORDER BY id ASC&quot;</span>
+        <span class="n">con</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">conexion</span><span class="p">()</span>
+        <span class="n">cursor</span> <span class="o">=</span> <span class="n">con</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+        <span class="n">datos</span> <span class="o">=</span> <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">sql</span><span class="p">)</span>
+        <span class="n">resultado</span> <span class="o">=</span> <span class="n">datos</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">fila</span> <span class="ow">in</span> <span class="n">resultado</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">fila</span><span class="p">)</span>
+            <span class="n">mitreeview</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span>
+                <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="n">fila</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">values</span><span class="o">=</span><span class="p">(</span><span class="n">fila</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">fila</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">fila</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">fila</span><span class="p">[</span><span class="mi">4</span><span class="p">])</span>
+            <span class="p">)</span></div>
+
+<div class="viewcode-block" id="Abm.limpiar_treeview"><a class="viewcode-back" href="../modelo.html#modelo.Abm.limpiar_treeview">[documentos]</a>    <span class="k">def</span> <span class="nf">limpiar_treeview</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tree</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Elimina del treeview todos los registros</span>
+
+<span class="sd">        :param tree: el treeview</span>
+<span class="sd">        :returns: nueva vista en treeview vacía</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">tree</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="o">*</span><span class="n">tree</span><span class="o">.</span><span class="n">get_children</span><span class="p">())</span></div>
+
+<div class="viewcode-block" id="Abm.limpia_entry"><a class="viewcode-back" href="../modelo.html#modelo.Abm.limpia_entry">[documentos]</a>    <span class="k">def</span> <span class="nf">limpia_entry</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nombre</span><span class="p">,</span> <span class="n">raza</span><span class="p">,</span> <span class="n">peso</span><span class="p">,</span> <span class="n">tipo</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Elimina los datos de los campos de la vista</span>
+
+<span class="sd">        :param nombre, raza, peso, tipo: variables de la vista</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">nombre</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;end&quot;</span><span class="p">)</span>
+        <span class="n">tipo</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;end&quot;</span><span class="p">)</span>
+        <span class="n">raza</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;end&quot;</span><span class="p">)</span>
+        <span class="n">peso</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;end&quot;</span><span class="p">)</span></div></div>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">Veterinaria</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navegación</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../controlado.html">controlado module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../decoradores.html">decoradores module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modelo.html">modelo module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../observador.html">observador module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../vista.html">vista module</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Código de módulo</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Búsqueda rápida</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Ir a" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2023, Ese Oxalde.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.3.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>
