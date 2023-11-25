@@ -18,9 +18,9 @@ Nivel 1: Crear una app que contenga un ABM con toma de datos de teclado, utiliza
 Nivel 2: La app debe usarse según el paradigma POO, se debe implementar MVC, agregar excepciones y documentar con Sphinx
 Nivel 3: Agregar Decoradores y patrón observador. Además, implementar un servidor para generar un registro de log con la información que llega desde un cliente.
 ### Screenshot
-![](screenshot/captura1.jpg)
+![](screenshot/captura1.png)
 Para agregar se debe elejir una fila y luego click en actualizar, por eso se desactiva el botón de Agregar
-![](screenshot/captura-actualizar.jpg)
+![](screenshot/captura-actualizar.png)
 
 ### Links
 - URL: [Github](https://github.com/eseoxalde/DipoPython_TPFinal)
